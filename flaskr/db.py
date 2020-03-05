@@ -40,5 +40,5 @@ def init_db_command():
 def init_app(app):
     # when app stops(after returning response), close_db is called.
     app.teardown_appcontext(close_db)
-    # add "flask init-db" as a new command
+    # add "flask init-db" as a new command on terminal.
     app.cli.add_command(init_db_command)
