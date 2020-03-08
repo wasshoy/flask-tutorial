@@ -9,7 +9,7 @@
 
 {% block content %}
   {% for post in posts %}
-  <article class="post">
+    <article class="post">
       <header>
           <div>
               <h1>{{ post['title'] }}</h1>
@@ -17,11 +17,12 @@
           </div>
           {% if g.user['id'] == post['author_id'] %}
             <a class="action" href="{{ url_for('blog.update', id=post['id']) }}">Edit</a>
+          {% endif %}
       </header>
       <p class="body">{{ post['body'] }}</p>
-  </article>
-  {% if not loop.last %}
-    <hr>
-  {% endif %}
+    </article>
+    {% if not loop.last %}
+      <hr>
+    {% endif %}
   {% endfor %}
 {% endblock %}

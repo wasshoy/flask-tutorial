@@ -14,7 +14,7 @@ def index():
     posts = db.execute(
         'SELECT p.id, title, body, created, author_id, username'
         ' FROM post p JOIN user u ON p.author_id = u.id'
-        ' OREDER BY created DESC'
+        ' ORDER BY created DESC'
     ).fetchall()
     return render_template('blog/index.html',posts=posts)
 
@@ -45,7 +45,9 @@ def create():
 def get_post(id, check_author=True):
     post = get_db().execute(
         'SELECT p.id, title, body, created, author_id, username'
-        'FROM post p JOIN user u ON p.author_id = u.id'
+        ' FROM post p JOIN user u ON p.author_id = u.id'
+        ' WHERE p.id = ?',
+        (id,)
     ).fetchone()
 
     if post is None:
@@ -66,16 +68,19 @@ def update(id):
         body = request.form['body']
         error = None
 
-    if error is not None:
-        flash(error)
-    else:
-        db = get_db()
-        db.execute(
-            'UPDATE post SET title = ?, body = ?'
-            'WHERE id = ?',
-            (title, body, id)
-        )
-        db.commit()
+        if not title:
+            error = 'Title is requried.'
+
+        if error is not None:
+            flash(error)
+        else:
+            db = get_db()
+            db.execute(
+                'UPDATE post SET title = ?, body = ?'
+                'WHERE id = ?',
+                (title, body, id)
+            )
+            db.commit()
         return redirect(url_for('blog.index'))
 
     return render_template('blog/update.html', post=post)
